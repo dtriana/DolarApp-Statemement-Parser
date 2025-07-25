@@ -49,12 +49,13 @@ jobs:
               prerelease: false,
               release_name: latestTag
             });
-            return { upload_url: release.data.upload_url }
+            return release.data.upload_url
+
       - name: Debug upload_url
         run: |
           echo "Return object is ${{ toJson(steps.create_release.outputs) }}"
-          echo "Property value is ${{ steps.create_release.outputs.Result.upload_url }}"
-          echo "Result value is ${{ steps.create_release.outputs.Result }}"
+          echo "Property value is ${{ steps.create_release.outputs }}"
+          echo "Result value is ${{ steps.create_release.outputs.upload_url }}"
           
       - name: Upload Artifacts
         uses: actions/upload-release-asset@v1
