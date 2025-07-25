@@ -80,7 +80,7 @@ jobs:
               prerelease: false
             });
       - name: Upload Artifacts
-        if: steps.versionize.outcome == 'success' and steps.build.outcome == 'success'
+        if: steps.versionize.outcome == 'success' && steps.build.outcome == 'success'
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ github.token }}
