@@ -34,7 +34,7 @@ jobs:
       # Run Versionize to bump version, update changelog, tag commit
       - name: Versionize Release
         id: versionize
-        working-directory: ./src/DolarAppStatementParser
+        working-directory: src/DolarAppStatementParser
         run: versionize --exit-insignificant-commits
         continue-on-error: true
 
