@@ -9,12 +9,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Check out your code with full git history
       - name: checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 0
-
+          sparse-checkout: |
+            .github
+            src
       # Setup .NET (change version as needed)
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
@@ -34,7 +34,7 @@ jobs:
       # Run Versionize to bump version, update changelog, tag commit
       - name: Versionize Release
         id: versionize
-        working-directory: src/DolarAppStatementParser
+        working-directory: ${{ github.workspace }}/src/DolarAppStatementParser
         run: versionize --exit-insignificant-commits
         continue-on-error: true
 
