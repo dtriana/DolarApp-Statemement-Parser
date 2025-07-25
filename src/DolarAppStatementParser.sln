@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DollarAppStatementParser", "DollarAppStatementParser\DollarAppStatementParser.csproj", "{88BDB083-A29D-457A-9C5D-9CA5B0D63245}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DolarAppStatementParser", "DolarAppStatementParser\DolarAppStatementParser.csproj", "{88BDB083-A29D-457A-9C5D-9CA5B0D63245}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
