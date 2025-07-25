@@ -55,14 +55,14 @@ jobs:
         run: |
           echo "Return object is ${{ toJson(steps.create_release.outputs) }}"
           echo "Property value is ${{ steps.create_release.outputs }}"
-          echo "Result value is ${{ steps.create_release.outputs.upload_url }}"
+          echo "Result value is ${{ steps.create_release.outputs.result }}"
           
       - name: Upload Artifacts
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
-          upload_url: ${{ steps.create_release.outputs.Result.upload_url }}
+          upload_url: ${{ steps.create_release.outputs.result }}
           asset_path:  ${{ github.workspace }}/src/DolarAppStatementParser/bin/Release/net9.0/win-x64/publish/DolarAppStatementParser.exe
           asset_name: DolarAppStatementParser.exe
           asset_content_type: application/exe   
