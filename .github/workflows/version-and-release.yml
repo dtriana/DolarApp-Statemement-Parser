@@ -49,7 +49,7 @@ jobs:
               prerelease: false,
               release_name: latestTag
             });
-            return { response: release }
+            return { upload_url: release.data.upload_url }
       
       - name: Debug upload_url
         run: echo "Upload URL is ${{ toJson(steps.create_release.outputs) }}"
