@@ -14,7 +14,8 @@ The statements can be from any period, but the files should follow the format wh
 
 The transaction details section should look like this for the application to work:
 
-![Transaction Example](.\docs\img\transactions.png "Transactions Example")
+![Transaction Example](./docs/img/transactions.png "Transactions Example")
+
 
 ## How it works
 
