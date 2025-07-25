@@ -18,13 +18,22 @@ using var streamWriter = new StreamWriter( $"{directoryPath}\\MyStatement{DateTi
 streamWriter.WriteLine("Date,Type,Amount,Currency,LocalAmount,Description,Flow");
 foreach (var file in statementFiles)
 {
-    var year = int.Parse(file.Substring(file.IndexOf(statementsFileNamePrefix, StringComparison.InvariantCulture) + statementsFileNamePrefix.Length, 4));
+    if (!DateOnly.TryParse(
+            file.Substring(
+                file.IndexOf(statementsFileNamePrefix, StringComparison.InvariantCulture) +
+                statementsFileNamePrefix.Length, 7), out var fileNameDate))
+    {
+        Console.WriteLine($"Skipping file {file} as the year seems wrong.");
+        continue;
+    }
+    
+    var year = fileNameDate.AddMonths(1).Year;
     if (year < 2023 || year > DateTime.Now.Year)
     {
         Console.WriteLine($"Skipping file {file} as the year seems wrong.");
         continue;
     }
-    Console.WriteLine($"Processing file {file}");
+    Console.WriteLine($"Processing file {file} for year {year}");
     ProcessFile(file, year, streamWriter);
 }
 return;
