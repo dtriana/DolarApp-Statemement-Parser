@@ -3,7 +3,8 @@ name: Version and Release
 on:
   push:
     branches: ['main']
-
+permissions:
+  contents: write
 jobs:
   build-and-release:
     runs-on: ubuntu-latest
