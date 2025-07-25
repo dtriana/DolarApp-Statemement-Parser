@@ -50,6 +50,9 @@ jobs:
               release_name: latestTag
             });
             return { upload_url: releaseResp.data.upload_url };
+      
+      - name: Debug upload_url
+        run: echo "Upload URL is ${{ steps.create_release.outputs.upload_url }}"
 
       - name: Upload Artifacts
         uses: actions/upload-release-asset@v1
