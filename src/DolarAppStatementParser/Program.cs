@@ -40,10 +40,8 @@ return;
 
 static void ProcessFile(string file, int year, StreamWriter streamWriter)
 {
-    const string textBeforeRefund = "Devolución de";
-    const string textAfterRefund = "tarjeta";
     const string textForRefund = "Devolución de tarjeta";
-    const string lineSeparator = "\r\n\r\n";
+    const string lineSeparator = "\r\n";
     const int movementLineLength = 92;
     const int movementLineDateColumnLength = 7;
     const int movementLineTypeColumnStartIndex = 14;
@@ -67,18 +65,10 @@ static void ProcessFile(string file, int year, StreamWriter streamWriter)
     document.Pages.Accept(textAbsorber);
     var extractedText = textAbsorber.Text;
     var lines = extractedText.Split(lineSeparator);
-    foreach (var originalLine in lines.Where(l=>l.Length > movementLineLength))
+    foreach (var line in lines.Where(l=>l.Length > movementLineLength))
     {
-        var refundLine = false;
-        var line = originalLine;
-        if (originalLine.TrimStart().StartsWith(textBeforeRefund) && originalLine.EndsWith(textAfterRefund))
-        {
-            refundLine = true;
-            line = ' ' + originalLine.Replace(textBeforeRefund, string.Empty).Replace(textAfterRefund, string.Empty).Trim();
-        }
-
         if (!DateOnly.TryParse(line.Remove(movementLineDateColumnLength) + " " + year, out var date)) continue;
-        var txType = refundLine ? textForRefund : line.Substring(movementLineTypeColumnStartIndex, movementLineTypeColumnLength).TrimEnd();
+        var txType = line.Substring(movementLineTypeColumnStartIndex, movementLineTypeColumnLength).TrimEnd();
         var amount = double.Parse(line.Substring(movementLineAmountColumnStartIndex, movementLineAmountColumnLength)
             .TrimEnd()
             .Replace(plusSignWithASpace, string.Empty)
@@ -92,6 +82,7 @@ static void ProcessFile(string file, int year, StreamWriter streamWriter)
                 .Replace(minusSignWithASpace, "-"),amountsFormat);
         var description = line.Substring(movementLineLocalDescriptionColumnStartIndex).TrimEnd();
         var flow = amount > 0 ? "In" : "Out";
+        if(string.IsNullOrWhiteSpace(txType) && flow == "In") txType = textForRefund;
         streamWriter.WriteLine($"{date:yyyy-MM-dd},\"{txType}\",{amount},{currency},{localAmount},\"{description}\",{flow}");
     }
 }
