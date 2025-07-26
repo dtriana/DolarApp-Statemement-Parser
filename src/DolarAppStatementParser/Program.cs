@@ -40,7 +40,9 @@ return;
 
 static void ProcessFile(string file, int year, StreamWriter streamWriter)
 {
-    const string textBeforeMovementsTable = "Descripción\r\n\r\n";
+    const string textBeforeRefund = "Devolución de";
+    const string textAfterRefund = "tarjeta";
+    const string textForRefund = "Devolución de tarjeta";
     const string lineSeparator = "\r\n\r\n";
     const int movementLineLength = 92;
     const int movementLineDateColumnLength = 7;
@@ -64,13 +66,19 @@ static void ProcessFile(string file, int year, StreamWriter streamWriter)
     var textAbsorber = new Aspose.Pdf.Text.TextAbsorber();
     document.Pages.Accept(textAbsorber);
     var extractedText = textAbsorber.Text;
-    var lessText = extractedText.Substring(extractedText.IndexOf(textBeforeMovementsTable, StringComparison.InvariantCulture) + textBeforeMovementsTable.Length);
-    var lines = lessText.Split(lineSeparator);
-    foreach (var line in lines)
+    var lines = extractedText.Split(lineSeparator);
+    foreach (var originalLine in lines.Where(l=>l.Length > movementLineLength))
     {
-        if (line.Length < movementLineLength) continue;
+        var refundLine = false;
+        var line = originalLine;
+        if (originalLine.TrimStart().StartsWith(textBeforeRefund) && originalLine.EndsWith(textAfterRefund))
+        {
+            refundLine = true;
+            line = ' ' + originalLine.Replace(textBeforeRefund, string.Empty).Replace(textAfterRefund, string.Empty).Trim();
+        }
+
         if (!DateOnly.TryParse(line.Remove(movementLineDateColumnLength) + " " + year, out var date)) continue;
-        var txType = line.Substring(movementLineTypeColumnStartIndex, movementLineTypeColumnLength).TrimEnd();
+        var txType = refundLine ? textForRefund : line.Substring(movementLineTypeColumnStartIndex, movementLineTypeColumnLength).TrimEnd();
         var amount = double.Parse(line.Substring(movementLineAmountColumnStartIndex, movementLineAmountColumnLength)
             .TrimEnd()
             .Replace(plusSignWithASpace, string.Empty)
