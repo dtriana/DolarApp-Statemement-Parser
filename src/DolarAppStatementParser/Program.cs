@@ -55,6 +55,8 @@ static void ProcessFile(string file, int year, StreamWriter streamWriter)
     const int movementLineLocalDescriptionColumnStartIndex = 91;
     const string plusSignWithASpace = "+ ";
     const string minusSignWithASpace = "- ";
+    const string inFlow = "In";
+    const string outFlow = "Out";
     var amountsFormat = new NumberFormatInfo
     {
         NumberGroupSeparator = ",",
@@ -81,8 +83,8 @@ static void ProcessFile(string file, int year, StreamWriter streamWriter)
                 .Replace(plusSignWithASpace, string.Empty)
                 .Replace(minusSignWithASpace, "-"),amountsFormat);
         var description = line.Substring(movementLineLocalDescriptionColumnStartIndex).TrimEnd();
-        var flow = amount > 0 ? "In" : "Out";
-        if(string.IsNullOrWhiteSpace(txType) && flow == "In") txType = textForRefund;
+        var flow = amount > 0 ? inFlow : outFlow;
+        if(string.IsNullOrWhiteSpace(txType) && flow == inFlow) txType = textForRefund;
         streamWriter.WriteLine($"{date:yyyy-MM-dd},\"{txType}\",{amount},{currency},{localAmount},\"{description}\",{flow}");
     }
 }
